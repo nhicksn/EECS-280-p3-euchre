@@ -110,36 +110,68 @@ bool Card::is_trump(const std::string &trump) const {
 //EFFECTS Returns true if lhs is lower value than rhs.
 //  Does not consider trump.
 bool operator<(const Card &lhs, const Card &rhs) {
+    int indexLHS = 0;
+    int indexRHS = 0;
+    for(int i = 0; i < 13; i++) {
+        if(lhs.get_rank() == RANK_NAMES_BY_WEIGHT[i]) {
+            indexLHS = i;
+        }
+        else if(rhs.get_rank() == RANK_NAMES_BY_WEIGHT[i]) {
+            indexRHS = i;
+        }
+    }
+    if(indexLHS < indexRHS) return true;
+    else return false;
     assert(false);
 }
 
 //EFFECTS Returns true if lhs is lower value than rhs or the same card as rhs.
 //  Does not consider trump.
 bool operator<=(const Card &lhs, const Card &rhs) {
+    if (lhs < rhs || lhs.get_rank() == rhs.get_rank()) {
+        return true;
+    }
+    else return false;
     assert(false);
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs.
 //  Does not consider trump.
 bool operator>(const Card &lhs, const Card &rhs) {
+    if(!(lhs < rhs) && lhs.get_rank() != rhs.get_rank()) {
+        return true;
+    }
+    else return false;
     assert(false);
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs or the same card as rhs.
 //  Does not consider trump.
 bool operator>=(const Card &lhs, const Card &rhs) {
+    if(!(lhs < rhs)) {
+        return true;
+    }
+    else return false;
     assert(false);
 }
 
 //EFFECTS Returns true if lhs is same card as rhs.
 //  Does not consider trump.
 bool operator==(const Card &lhs, const Card &rhs) {
+    if(lhs.get_rank() == rhs.get_rank()) {
+        return true;
+    }
+    else return false;
     assert(false);
 }
 
 //EFFECTS Returns true if lhs is not the same card as rhs.
 //  Does not consider trump.
 bool operator!=(const Card &lhs, const Card &rhs) {
+    if(!(lhs == rhs)) {
+        return true;
+    }
+    else return false;
     assert(false);
 }
 
@@ -167,13 +199,34 @@ std::string Suit_next(const std::string &suit) {
 
 //EFFECTS Prints Card to stream, for example "Two of Spades"
 std::ostream & operator<<(std::ostream &os, const Card &card) {
-    assert(false);
+    os << card.get_rank() << " of " << card.get_suit() << std::endl;
+    return os;
 }
 
 //REQUIRES trump is a valid suit
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
 // order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, const std::string &trump) {
+    assert(trump == "Clubs" || trump == "Diamonds"
+            || trump == "Hearts" || trump == "Spades");
+    if(!a.is_trump(trump) && b.is_trump(trump)) {
+        return true;
+    }
+    else if(a.is_trump(trump) && !b.is_trump(trump)) {
+        return false;
+    }
+    if(a.is_trump(trump) && b.is_trump(trump)) {
+        if(a.is_right_bower(trump)) return false;
+        else if(b.is_right_bower(trump)) return true;
+        else if(a.is_left_bower(trump) && !b.is_right_bower(trump)) return false;
+        else if(b.is_left_bower(trump) && !a.is_right_bower(trump)) return true;
+        if(a > b) return false;
+        else if (b > a) return true;
+    }
+    if(!a.is_trump(trump) && !b.is_trump(trump)) {
+        if (a > b) return false;
+        else if (b > a) return true;
+    }
     assert(false);
 }
 

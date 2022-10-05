@@ -28,7 +28,8 @@ constexpr const char* const Card::SUIT_DIAMONDS;
 
 //EFFECTS Initializes Card to the Two of Spades
 Card::Card() {
-    assert(false);
+    this->rank = RANK_TWO;
+    this->suit = SUIT_SPADES;
 }
 
 //REQUIRES rank is one of "Two", "Three", "Four", "Five", "Six", "Seven",
@@ -36,16 +37,19 @@ Card::Card() {
 //  suit is one of "Spades", "Hearts", "Clubs", "Diamonds"
 //EFFECTS Initializes Card to specified rank and suit
 Card::Card(const std::string &rank_in, const std::string &suit_in) {
-    assert(false);
+    this->rank = rank_in;
+    this ->suit = suit_in;
 }
 
 //EFFECTS Returns the rank
 std::string Card::get_rank() const {
+    return this->rank;
     assert(false);
 }
 
 //EFFECTS Returns the suit.  Does not consider trump.
 std::string Card::get_suit() const {
+    return this->suit;
     assert(false);
 }
 
@@ -53,17 +57,39 @@ std::string Card::get_suit() const {
 //EFFECTS Returns the suit
 //HINT: the left bower is the trump suit!
 std::string Card::get_suit(const std::string &trump) const {
+    assert(trump == SUIT_CLUBS || trump == SUIT_DIAMONDS
+            || trump == SUIT_HEARTS || trump == SUIT_SPADES);
+    return trump;
     assert(false);
 }
 
 //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
 bool Card::is_face_or_ace() const {
+    if(this->rank == RANK_JACK || RANK_QUEEN || RANK_KING || RANK_ACE) {
+        return true;
+    }
+    else return false;
+    assert(false);
+}
+
+//REQUIRES trump is a valid suit
+//EFFECTS Returns true if card is the Jack of the trump suit
+bool Card::is_right_bower(const std::string &trump) const {
+    if(this->suit == trump && this->rank == RANK_JACK) {
+        return true;
+    }
+    else return false;
     assert(false);
 }
 
 //REQUIRES trump is a valid suit
 //EFFECTS Returns true if card is the Jack of the next suit
 bool Card::is_left_bower(const std::string &trump) const {
+    std::string sameColor = Suit_next(trump);
+    if(this->suit == sameColor && this->rank == RANK_JACK) {
+        return true;
+    }
+    else return false;
     assert(false);
 }
 
@@ -71,6 +97,13 @@ bool Card::is_left_bower(const std::string &trump) const {
 //EFFECTS Returns true if the card is a trump card.  All cards of the trump
 // suit are trump cards.  The left bower is also a trump card.
 bool Card::is_trump(const std::string &trump) const {
+    if(this->suit == trump) {
+        return true;
+    }
+    else if(this->is_left_bower(trump)) {
+        return true;
+    }
+    else return false;
     assert(false);
 }
 
@@ -113,6 +146,22 @@ bool operator!=(const Card &lhs, const Card &rhs) {
 //REQUIRES suit is a valid suit
 //EFFECTS returns the next suit, which is the suit of the same color
 std::string Suit_next(const std::string &suit) {
+    assert(suit == "Clubs" || suit == "Diamonds"
+            || suit == "Hearts" || suit == "Spades");
+    std::string sameColor;
+    if(suit == "Diamonds") {
+        sameColor = "Hearts";
+    }
+    else if(suit == "Hearts") {
+        sameColor = "Diamonds";
+    }
+    else if(suit == "Spades") {
+        sameColor = "Clubs";
+    }
+    else if(suit == "Clubs") {
+        sameColor = "Spades";
+    }
+    return sameColor;
     assert(false);
 }
 

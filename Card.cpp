@@ -245,6 +245,12 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card,
     assert(trump == "Clubs" || trump == "Diamonds"
             || trump == "Hearts" || trump == "Spades");
     std::string ledSuit = led_card.get_suit();
+    std::string ledRank = led_card.get_rank();
+    std::string aSuit = a.get_suit();
+    std::string bSuit = b.get_suit();
+    std::string aRank = a.get_rank();
+    std::string bRank = b.get_suit();
     if(a == b) return false;
+    if(aSuit != ledSuit && bSuit == ledSuit && aSuit != trump) return true;
     assert(false);
 }

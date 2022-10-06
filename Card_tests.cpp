@@ -3,6 +3,7 @@
 #include "Card.h"
 #include "unit_test_framework.h"
 #include <iostream>
+#include <cassert>
 
 using namespace std;
 

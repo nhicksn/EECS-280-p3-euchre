@@ -16,8 +16,18 @@ TEST(test_card_ctor) {
 //Tests for get rank
 //EFFECTS Returns the rank
 
+TEST(get_rank_basic) {
+    Card c(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    ASSERT_EQUAL(Card::RANK_NINE, c.get_rank());
+}
+
 //Tests for get suit
 //EFFECTS Returns the suit.  Does not consider trump.
+
+TEST(get_suit_basic) {
+    Card c(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    ASSERT_EQUAL(Card::SUIT_DIAMONDS, c.get_suit());
+}
 
 //Tests for get suit (Trump)
 //REQUIRES trump is a valid suit

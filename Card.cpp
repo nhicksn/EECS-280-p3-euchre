@@ -89,8 +89,7 @@ bool Card::is_right_bower(const std::string &trump) const {
 //REQUIRES trump is a valid suit
 //EFFECTS Returns true if card is the Jack of the next suit
 bool Card::is_left_bower(const std::string &trump) const {
-    std::string sameColor = Suit_next(trump);
-    if(this->suit == sameColor && this->rank == RANK_JACK) {
+    if(this->suit == Suit_next(trump) && this->rank == RANK_JACK) {
         return true;
     }
     else return false;
@@ -114,17 +113,28 @@ bool Card::is_trump(const std::string &trump) const {
 //EFFECTS Returns true if lhs is lower value than rhs.
 //  Does not consider trump.
 bool operator<(const Card &lhs, const Card &rhs) {
-    int indexLHS = 0;
-    int indexRHS = 0;
-    for(int i = 0; i < 13; i++) {
+    int indexRankLHS, indexRankRHS, indexSuitLHS, indexSuitRHS = 0;
+    for(int i = 0; i < NUM_RANKS; i++) {
         if(lhs.get_rank() == RANK_NAMES_BY_WEIGHT[i]) {
-            indexLHS = i;
+            indexRankLHS = i;
         }
-        else if(rhs.get_rank() == RANK_NAMES_BY_WEIGHT[i]) {
-            indexRHS = i;
+        if(rhs.get_rank() == RANK_NAMES_BY_WEIGHT[i]) {
+            indexRankRHS = i;
         }
     }
-    if(indexLHS < indexRHS) return true;
+    for(int i = 0; i < NUM_SUITS; i++) {
+        if(lhs.get_suit() == SUIT_NAMES_BY_WEIGHT[i]) {
+            indexSuitLHS = i;
+        }
+        if(rhs.get_suit() == SUIT_NAMES_BY_WEIGHT[i]) {
+            indexSuitRHS = i;
+        }
+    }
+    bool rankEqual = indexRankLHS == indexRankRHS;
+    bool rankLess = indexRankLHS < indexRankRHS;
+    bool suitLess = indexSuitLHS < indexSuitRHS;
+    if(rankLess) return true;
+    if(rankEqual && suitLess) return true;
     else return false;
     assert(false);
 }
@@ -132,7 +142,7 @@ bool operator<(const Card &lhs, const Card &rhs) {
 //EFFECTS Returns true if lhs is lower value than rhs or the same card as rhs.
 //  Does not consider trump.
 bool operator<=(const Card &lhs, const Card &rhs) {
-    if (lhs < rhs || lhs.get_rank() == rhs.get_rank()) {
+    if (lhs < rhs || (lhs == rhs)) {
         return true;
     }
     else return false;
@@ -142,7 +152,7 @@ bool operator<=(const Card &lhs, const Card &rhs) {
 //EFFECTS Returns true if lhs is higher value than rhs.
 //  Does not consider trump.
 bool operator>(const Card &lhs, const Card &rhs) {
-    if(!(lhs < rhs) && lhs.get_rank() != rhs.get_rank()) {
+    if(!(lhs < rhs) && (lhs != rhs)) {
         return true;
     }
     else return false;
@@ -152,7 +162,7 @@ bool operator>(const Card &lhs, const Card &rhs) {
 //EFFECTS Returns true if lhs is higher value than rhs or the same card as rhs.
 //  Does not consider trump.
 bool operator>=(const Card &lhs, const Card &rhs) {
-    if(!(lhs < rhs)) {
+    if(!(lhs < rhs) || (lhs == rhs)) {
         return true;
     }
     else return false;
@@ -213,27 +223,11 @@ std::ostream & operator<<(std::ostream &os, const Card &card) {
 bool Card_less(const Card &a, const Card &b, const std::string &trump) {
     assert(trump == "Clubs" || trump == "Diamonds"
             || trump == "Hearts" || trump == "Spades");
-    if(!a.is_trump(trump) && b.is_trump(trump)) {
-        return true;
-    }
-    else if(a.is_trump(trump) && !b.is_trump(trump)) {
-        return false;
-    }
-    else if(a.is_trump(trump) && b.is_trump(trump)) {
-        if(a.is_right_bower(trump)) return false;
-        else if(b.is_right_bower(trump)) return true;
-        else if(a.is_left_bower(trump) && !b.is_right_bower(trump)) return false;
-        else if(b.is_left_bower(trump) && !a.is_right_bower(trump)) return true;
-        if(a > b) return false;
-        else if (b > a) return true;
-    }
-    else if(!a.is_trump(trump) && !b.is_trump(trump)) {
-        if (a > b) return false;
-        else if (b > a) return true;
-    }
-    if(a == b){
-        return false;
-    }
+    std::string aSuit = a.get_suit();
+    std::string bSuit = b.get_suit();
+    std::string aRank = a.get_rank();
+    std::string bRank = b.get_suit();
+    
     assert(false);
 }
 
@@ -250,7 +244,6 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card,
     std::string bSuit = b.get_suit();
     std::string aRank = a.get_rank();
     std::string bRank = b.get_suit();
-    if(a == b) return false;
-    if(aSuit != ledSuit && bSuit == ledSuit && aSuit != trump) return true;
+
     assert(false);
 }

@@ -223,11 +223,21 @@ std::ostream & operator<<(std::ostream &os, const Card &card) {
 bool Card_less(const Card &a, const Card &b, const std::string &trump) {
     assert(trump == "Clubs" || trump == "Diamonds"
             || trump == "Hearts" || trump == "Spades");
-    std::string aSuit = a.get_suit();
-    std::string bSuit = b.get_suit();
-    std::string aRank = a.get_rank();
-    std::string bRank = b.get_suit();
-    
+    if(a == b) return false;
+    if(a.is_right_bower(trump)) return false;
+    else if(b.is_right_bower(trump)) return true;
+    else if(a.is_left_bower(trump)) return false;
+    else if(b.is_left_bower(trump)) return true;
+    else if(b.is_trump(trump) && !a.is_trump(trump)) return true;
+    else if(!b.is_trump(trump) && a.is_trump(trump)) return false;
+    else if(b.is_trump(trump) && a.is_trump(trump)) {
+        if(b > a) return true;
+        else if(a > b) return false;
+    }
+    else if(!b.is_trump(trump) && !a.is_trump(trump)) {
+        if(b > a) return true;
+        else if(a > b) return false;
+    }
     assert(false);
 }
 
@@ -239,11 +249,19 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card,
     assert(trump == "Clubs" || trump == "Diamonds"
             || trump == "Hearts" || trump == "Spades");
     std::string ledSuit = led_card.get_suit();
-    std::string ledRank = led_card.get_rank();
     std::string aSuit = a.get_suit();
     std::string bSuit = b.get_suit();
     std::string aRank = a.get_rank();
     std::string bRank = b.get_suit();
+    if(a == b) return false;
+    if(aSuit != ledSuit && bSuit != ledSuit) {
+        if(Card_less(a, b, trump)) {
+            return true;
+        }
+        else return false;
+    }
+    else if((aSuit == ledSuit || aSuit == trump) && (bSuit != ledSuit && bSuit != trump)) return false;
+    else if((aSuit != ledSuit && aSuit != trump) && (bSuit == ledSuit || bSuit == trump)) return true;
 
     assert(false);
 }

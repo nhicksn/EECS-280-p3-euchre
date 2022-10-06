@@ -33,6 +33,13 @@ TEST(get_suit_basic) {
 //REQUIRES trump is a valid suit
 //EFFECTS Returns the suit
 
+TEST(get_suit_trump) {
+    Card c(Card::RANK_KING, Card::SUIT_DIAMONDS);
+    std::string trump = "Hearts";
+
+    ASSERT_EQUAL(Card::SUIT_DIAMONDS, c.get_suit(trump));
+}
+
 //Tests for Face or Ace
 //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
 
@@ -58,10 +65,72 @@ TEST(get_suit_basic) {
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
 // order, as described in the spec.
 
+TEST(card_less_basic) {
+    Card a(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+    Card b(Card::RANK_NINE, Card::SUIT_HEARTS);
+    
+    std::string trump = "Hearts";
+
+    assert(Card_less(a, b, trump));
+
+}
+
+TEST(card_less_both_are_trump) {
+    Card a(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    Card b(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+    
+    std::string trump = "Diamonds";
+
+    assert(Card_less(a, b, trump));
+
+}
+
+TEST(card_less_none_are_trump) {
+    Card a(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+    Card b(Card::RANK_NINE, Card::SUIT_HEARTS);
+    
+    std::string trump = "Clubs";
+
+    assert(!Card_less(a, b, trump));
+
+}
 
 //Tests Card Less suit led
 //REQUIRES trump is a valid suit
 //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
 //  and the suit led to determine order, as described in the spec.
+
+TEST(card_less_led_suit_basic) {
+    Card a(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+    Card b(Card::RANK_NINE, Card::SUIT_HEARTS);
+    Card led(Card::RANK_QUEEN, Card::SUIT_HEARTS);
+    
+    std::string trump = "Clubs";
+
+    assert(Card_less(a, b, led, trump));
+
+}
+
+TEST(card_less_led_suit_is_trump) {
+    Card a(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+    Card b(Card::RANK_NINE, Card::SUIT_HEARTS);
+    Card led(Card::RANK_QUEEN, Card::SUIT_HEARTS);
+    
+    std::string trump = "Hearts";
+
+    assert(Card_less(a, b, led, trump));
+
+}
+
+TEST(card_less_led_suit_all_diff_suits) {
+    Card a(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+    Card b(Card::RANK_NINE, Card::SUIT_HEARTS);
+    Card led(Card::RANK_QUEEN, Card::SUIT_CLUBS);
+    
+    std::string trump = "Spades";
+
+    assert(!Card_less(a, b, led, trump));
+
+}
 
 TEST_MAIN()

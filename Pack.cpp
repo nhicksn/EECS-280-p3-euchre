@@ -54,9 +54,18 @@ void Pack::reset() {
 //          performs an in shuffle seven times. See
 //          https://en.wikipedia.org/wiki/In_shuffle.
 void Pack::shuffle() {
+    std::array<Card, PACK_SIZE> copy1;
+    std::array<Card, PACK_SIZE> copy2;
+    copy1 = this->cards;
+    copy2 = this->cards;
+    int n = PACK_SIZE/2;
     for(int i = 0; i < 7; i++) {
-        
+        for(int k = 0; k < PACK_SIZE; k++) {
+            copy1[(2*(k+1) % (2*n + 1)) - 1] = copy2[k];
+        }
+        copy2 = copy1;
     }
+    this->cards = copy1;
     this->reset();
 }
 

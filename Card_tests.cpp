@@ -43,23 +43,175 @@ TEST(get_suit_trump) {
 
 //Tests for Face or Ace
 //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
+TEST(face_or_ace_king) {
+    Card c(Card::RANK_KING, Card::SUIT_DIAMONDS);
+
+    assert(c.is_face_or_ace());
+
+}
+
+TEST(face_or_ace_ace) {
+    Card c(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+
+    assert(c.is_face_or_ace());
+
+}
+
+TEST(face_or_ace_not_either) {
+    Card c(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+
+    assert(!c.is_face_or_ace());
+
+}
 
 //Tests for is Right Bower
 //EFFECTS Returns true if card is the Jack of the trump suit
 
+TEST(is_right_bower_basic) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+
+    std::string trump = "Diamonds";
+    assert(c.is_right_bower(trump));
+
+}
+
+TEST(is_right_bower_wrong_suit) {
+    Card c(Card::RANK_JACK, Card::SUIT_HEARTS);
+
+    std::string trump = "Diamonds";
+    assert(!c.is_right_bower(trump));
+
+}
+
+TEST(is_right_bower_wrong_rank) {
+    Card c(Card::RANK_KING, Card::SUIT_DIAMONDS);
+
+    std::string trump = "Diamonds";
+    assert(!c.is_right_bower(trump));
+
+}
+
 //Tests for is Left Bower
 //EFFECTS Returns true if card is the Jack of the next suit
+
+TEST(is_left_bower_basic_red) {
+    Card c(Card::RANK_JACK, Card::SUIT_HEARTS);
+
+    std::string trump = "Diamonds";
+    assert(c.is_left_bower(trump));
+
+}
+
+TEST(is_left_bower_basic_black) {
+    Card c(Card::RANK_JACK, Card::SUIT_CLUBS);
+
+    std::string trump = "Spades";
+    assert(c.is_left_bower(trump));
+
+}
+
+TEST(is_left_bower_same_suit) {
+    Card c(Card::RANK_JACK, Card::SUIT_CLUBS);
+
+    std::string trump = "Clubs";
+    assert(!c.is_left_bower(trump));
+
+}
+
+TEST(is_left_bower_diff_rank) {
+    Card c(Card::RANK_KING, Card::SUIT_CLUBS);
+
+    std::string trump = "Spades";
+    assert(!c.is_left_bower(trump));
+
+}
 
 //Tests Card is Trump
 //REQUIRES trump is a valid suit
 //EFFECTS Returns true if the card is a trump card.  All cards of the trump
 // suit are trump cards.  The left bower is also a trump card.
 
+TEST(card_is_trump_basic) {
+    Card c(Card::RANK_KING, Card::SUIT_HEARTS);
+
+    std::string trump = "Hearts";
+    assert(c.is_trump(trump));
+
+}
+
+TEST(card_is_trump_not_face) {
+    Card c(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+
+    std::string trump = "Diamonds";
+    assert(c.is_trump(trump));
+
+}
+
+TEST(card_is_trump_not_trump) {
+    Card c(Card::RANK_NINE, Card::SUIT_CLUBS);
+
+    std::string trump = "Spades";
+    assert(!c.is_trump(trump));
+
+}
+
+TEST(card_is_trump_left_bower) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+
+    std::string trump = "Hearts";
+    assert(c.is_trump(trump));
+
+}
+
 //Tests Suit Next
 //EFFECTS returns the next suit, which is the suit of the same color
 
+TEST(suit_next_basic_red){
+    std::string suit = "Diamonds";
+    std::string nextSuit = "Hearts";
+
+    ASSERT_EQUAL(suit, Suit_next(nextSuit));
+
+}
+
+TEST(suit_next_basic_black){
+    std::string suit = "Spades";
+    std::string nextSuit = "Clubs";
+
+    ASSERT_EQUAL(suit, Suit_next(nextSuit));
+
+}
+
+TEST(suit_next_not_equal){
+    std::string suit = "Spades";
+    std::string nextSuit = "Hearts";
+
+    ASSERT_NOT_EQUAL(suit, Suit_next(nextSuit));
+    
+}
+
 //Test Card to Stream
 //EFFECTS Prints Card to stream, for example "Two of Spades"
+
+TEST(card_to_stream_basic) {
+  Card c(Card::RANK_TWO, Card::SUIT_SPADES);
+  ostringstream s; 
+
+  s << c;
+  ostringstream test;
+  test << "Two of Spades";
+  ASSERT_EQUAL(s.str(), test.str());
+}
+
+TEST(card_to_stream_face) {
+  Card c(Card::RANK_KING, Card::SUIT_HEARTS);
+  ostringstream s; 
+
+  s << c;
+  ostringstream test;
+  test << "King of Hearts";
+  ASSERT_EQUAL(s.str(), test.str());
+}
 
 //Tests Card Less
 //REQUIRES trump is a valid suit

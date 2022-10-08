@@ -30,9 +30,23 @@ TEST(deal_one_basic){
 
 }
 
+TEST(deal_one_last){
+    Pack pack;
+    Card currentCard;
+
+    for(int i = 0; i < 24; ++i){
+        currentCard = pack.deal_one();
+    }
+
+    ASSERT_EQUAL(Card::RANK_ACE, currentCard.get_rank());
+    ASSERT_EQUAL(Card::SUIT_DIAMONDS, currentCard.get_suit());
+
+}
+
 //Tests for shuffle
 // EFFECTS: Shuffles the Pack and resets the next index. This
 //performs an in shuffle seven times.
+
 
 //Tests for is pack empty
 // EFFECTS: returns true if there are no more cards left in the pack
@@ -44,9 +58,18 @@ TEST(is_pack_empty_basic){
     for(int i = 0; i < 24; ++i){
         currentCard = pack.deal_one();
     }
-    
     assert(pack.empty());
-
 }
+
+TEST(is_pack_empty_not_empty){
+    Pack pack;
+    Card currentCard;
+
+    for(int i = 0; i < 10; ++i){
+        currentCard = pack.deal_one();
+    }
+    assert(!pack.empty());
+}
+
 
 TEST_MAIN()

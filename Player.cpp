@@ -7,26 +7,6 @@
 #include "Player.h"
 #include "Card.h"
 
-Player * Player_factory(const std::string &name, const std::string &strategy) {
-  // We need to check the value of strategy and return 
-  // the corresponding player type.
-  if (strategy == "Simple") {
-    // The "new" keyword dynamically allocates an object.
-    return new SimplePlayer(name);
-  }
-  // Repeat for each other type of Player
-  else if(strategy == "Human") {
-    return new HumanPlayer(name);
-  }
-  // TODO: implement SimplePlayer and HumanPlayer
-  // Invalid strategy if we get here
-  assert(false);
-  return nullptr;
-}
-std::ostream & operator<<(std::ostream &os, const Player &p) {
-  assert(false);
-}
-
 class SimplePlayer: public Player {
 private:
   std::string name;
@@ -76,9 +56,9 @@ public:
     //if round 1 and order suit and suit of upcard are equal then suit of upcard is trump
     if(round == 1) {
       for(int i = 0; i < MAX_HAND_SIZE; i++) {
-        if(hand[i].get_suit(upTrump) == upTrump && hand[i].get_rank() == Card::RANK_JACK || 
+        if((hand[i].get_suit(upTrump) == upTrump) && (hand[i].get_rank() == Card::RANK_JACK || 
         hand[i].get_rank() == Card::RANK_QUEEN || hand[i].get_rank() == Card::RANK_KING ||
-        hand[i].get_rank() == Card::RANK_ACE) {
+        hand[i].get_rank() == Card::RANK_ACE)) {
           trumpCounter++;
         }
       }
@@ -92,17 +72,18 @@ public:
       trumpCounter = 0;
       std::string sameColor = Suit_next(upTrump);
       for(int i = 0; i < MAX_HAND_SIZE; i++) {
-        if(hand[i].get_suit(sameColor) == sameColor && hand[i].get_rank() == Card::RANK_JACK || 
+        if((hand[i].get_suit(sameColor) == sameColor) && (hand[i].get_rank() == Card::RANK_JACK || 
         hand[i].get_rank() == Card::RANK_QUEEN || hand[i].get_rank() == Card::RANK_KING ||
-        hand[i].get_rank() == Card::RANK_ACE) {
+        hand[i].get_rank() == Card::RANK_ACE)) {
           trumpCounter++;
         }
       }
-      if(trumpCounter >= 1 | is_dealer == true) {
+      if((trumpCounter >= 1) || (is_dealer == true)) {
         order_up_suit = sameColor;
         return true;
       }
     }
+    return false;
   }
 
   //REQUIRES Player has at least one card
@@ -110,7 +91,7 @@ public:
   void add_and_discard(const Card &upcard) override {
     //checks if player has at least one card
     for(int i = 0; i < MAX_HAND_SIZE; ++i){
-      if(hand[i].get_rank() != "null"); {
+      if(hand[i].get_rank() != "null") {
         break;
       }
       if(i == (MAX_HAND_SIZE-1) && hand[i].get_rank() == "null"){
@@ -137,7 +118,7 @@ public:
   //  is removed the player's hand.
   Card lead_card(const std::string &trump) override{
     for(int i = 0; i < MAX_HAND_SIZE; ++i){
-      if(hand[i].get_rank() != "null"); {
+      if(hand[i].get_rank() != "null") {
         break;
       }
       if(i == (MAX_HAND_SIZE-1) && hand[i].get_rank() == "null"){
@@ -177,11 +158,10 @@ public:
   //REQUIRES Player has at least one card, trump is a valid suit
   //EFFECTS  Plays one Card from Player's hand according to their strategy.
   //  The card is removed from the player's hand.
-Card play_card(const Card &led_card, const std::string &trump) override{
-  
+Card play_card(const Card &led_card, const std::string &trump) override {
   //checks if player has at least one card
   for(int i = 0; i < MAX_HAND_SIZE; ++i){
-    if(hand[i].get_rank() != "null"); {
+    if(hand[i].get_rank() != "null") {
     break;
     }
     if(i == (MAX_HAND_SIZE-1) && hand[i].get_rank() == "null"){
@@ -191,7 +171,8 @@ Card play_card(const Card &led_card, const std::string &trump) override{
   //checks if trump is valid input
   assert(trump == "Clubs" || trump == "Diamonds"
                || trump == "Hearts" || trump == "Spades");
-  bool canFollow   = false;
+
+  bool canFollow = false;
   std::array<Card, MAX_HAND_SIZE> hand = this->hand;
   std::string ledSuit = led_card.get_suit(trump);
   for(int i = 0; i < MAX_HAND_SIZE; i++) {
@@ -217,11 +198,44 @@ Card play_card(const Card &led_card, const std::string &trump) override{
     }
     return lowestCard;
   }
+  return hand[0];
 }
 
 
 };
 
 class HumanPlayer: public Player {
+private:
+  std::string name;
+  std::array<Card, MAX_HAND_SIZE> hand;
+  void print_hand() const {
+    for (size_t i=0; i < this->hand.size(); ++i) {
+      std::cout << "Human player " << this->name << "'s hand: "
+           << "[" << i << "] " << this->hand[i] << "\n";
+    }
+  }
+public:
 
+
+  
 };
+
+Player * Player_factory(const std::string &name, const std::string &strategy) {
+  // We need to check the value of strategy and return 
+  // the corresponding player type.
+  if (strategy == "Simple") {
+    // The "new" keyword dynamically allocates an object.
+    return new SimplePlayer(name);
+  }
+  // Repeat for each other type of Player
+  else if(strategy == "Human") {
+    return new HumanPlayer(name);
+  }
+  // Invalid strategy if we get here
+  assert(false);
+  return nullptr;
+}
+std::ostream & operator<<(std::ostream &os, const Player &p) {
+  assert(false);
+}
+

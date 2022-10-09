@@ -2,7 +2,7 @@
 
 #include "Player.h"
 #include "unit_test_framework.h"
-
+#include <cassert>
 #include <iostream>
 
 using namespace std;

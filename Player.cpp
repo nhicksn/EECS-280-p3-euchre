@@ -153,7 +153,7 @@ Card play_card(const Card &led_card, const std::string &trump) override {
   bool canFollow = false;
   std::vector<Card> hand = this->hand;
   std::string ledSuit = led_card.get_suit(trump);
-  int index;
+  int index = 0;
   for(int i = 0; i < hand.size(); i++) {
     if(hand[i].get_suit(trump) == ledSuit) {
       canFollow = true;
@@ -181,7 +181,8 @@ Card play_card(const Card &led_card, const std::string &trump) override {
     this->hand.erase(this->hand.begin() + index);
     return lowestCard;
   }
-  return hand[0];
+  Card c;
+  return c;
 }
 
 

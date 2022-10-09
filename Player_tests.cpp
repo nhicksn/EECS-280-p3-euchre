@@ -38,6 +38,32 @@ TEST(test_player_make_trump_basic) {
     Card upcard(Card::RANK_NINE, Card::SUIT_DIAMONDS);
     bool is_dealer = false;
     int round = 1;
+    std::string order_up_suit = "Diamonds";
+    
+    //simple player wants to order up trump suit, return true
+    assert(noah->make_trump(upcard, is_dealer, round, order_up_suit));
+
+    delete noah; 
+}
+
+TEST(test_player_make_trump_pass) {
+    Player * noah = Player_factory("Noah", "Simple");
+    Card upcard(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    bool is_dealer = false;
+    int round = 1;
+    std::string order_up_suit = "Pass";
+    
+    //simple player wants to pass, return false
+    assert(!noah->make_trump(upcard, is_dealer, round, order_up_suit));
+
+    delete noah; 
+}
+
+TEST(test_player_make_trump_second_round) {
+    Player * noah = Player_factory("Noah", "Simple");
+    Card upcard(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    bool is_dealer = false;
+    int round = 2;
     std::string order_up_suit = "Hearts";
     
     //simple player wants to make trump hearts, return true
@@ -46,6 +72,18 @@ TEST(test_player_make_trump_basic) {
     delete noah; 
 }
 
+TEST(test_player_make_trump_second_round_dealer) {
+    Player * noah = Player_factory("Noah", "Simple");
+    Card upcard(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    bool is_dealer = true;
+    int round = 2;
+    std::string order_up_suit = "Hearts";
+    
+    //simple player is dealer, wants to make trump hearts, return true, called screw the dealer in specs
+    assert(noah->make_trump(upcard, is_dealer, round, order_up_suit));
+
+    delete noah; 
+}
 
 //Test add and discard
 

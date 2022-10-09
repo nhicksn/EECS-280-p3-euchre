@@ -2,6 +2,7 @@
 
 #include "Pack.h"
 #include "unit_test_framework.h"
+#include <cassert>
 
 #include <iostream>
 

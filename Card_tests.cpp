@@ -14,6 +14,12 @@ TEST(test_card_ctor) {
     ASSERT_EQUAL(Card::SUIT_HEARTS, c.get_suit());
 }
 
+TEST(test_default_card_ctor) {
+    Card c;
+    ASSERT_EQUAL(c.get_suit(), Card::SUIT_SPADES);
+    ASSERT_EQUAL(c.get_rank(), Card::RANK_TWO);
+}
+
 //Tests for get rank
 //EFFECTS Returns the rank
 
@@ -22,12 +28,22 @@ TEST(get_rank_basic) {
     ASSERT_EQUAL(Card::RANK_NINE, c.get_rank());
 }
 
+TEST(get_rank_incorrect) {
+    Card c(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    ASSERT_NOT_EQUAL(Card::RANK_TWO, c.get_rank());
+}
+
 //Tests for get suit
 //EFFECTS Returns the suit.  Does not consider trump.
 
 TEST(get_suit_basic) {
     Card c(Card::RANK_NINE, Card::SUIT_DIAMONDS);
     ASSERT_EQUAL(Card::SUIT_DIAMONDS, c.get_suit());
+}
+
+TEST(get_suit_incorrect) {
+    Card c(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    ASSERT_NOT_EQUAL(Card::SUIT_CLUBS, c.get_suit());
 }
 
 //Tests for get suit (Trump)
@@ -169,6 +185,52 @@ TEST(card_is_trump_left_bower) {
     std::string trump = "Hearts";
     assert(c.is_trump(trump));
 
+}
+
+// Tests overload operators
+//EFFECTS Returns true if lhs is lower value than rhs.
+//  Does not consider trump.
+
+TEST(card1_less_than_card2) {
+    Card c1(Card::RANK_TWO, Card::SUIT_SPADES);
+    Card c2(Card::RANK_TWO, Card::SUIT_HEARTS);
+
+    assert(c1 < c2);
+}
+
+TEST(card1_less_than_or_equal_to_card2) {
+    Card c1(Card::RANK_TWO, Card::SUIT_SPADES);
+    Card c2(Card::RANK_TWO, Card::SUIT_SPADES);
+
+    assert(c1 <= c2);
+}
+
+TEST(card2_greater_than_card1) {
+    Card c1(Card::RANK_TWO, Card::SUIT_SPADES);
+    Card c2(Card::RANK_TWO, Card::SUIT_HEARTS);
+
+    assert(c2 > c1);
+}
+
+TEST(card1_greater_than_or_equal_to_card2) {
+    Card c1(Card::RANK_TWO, Card::SUIT_SPADES);
+    Card c2(Card::RANK_TWO, Card::SUIT_SPADES);
+
+    assert(c1 >= c2);
+}
+
+TEST(card1_equal_to_card2) {
+    Card c1(Card::RANK_TWO, Card::SUIT_SPADES);
+    Card c2(Card::RANK_TWO, Card::SUIT_SPADES);
+
+    assert(c1 == c2);
+}
+
+TEST(card2_not_equal_to_card1) {
+    Card c1(Card::RANK_TWO, Card::SUIT_SPADES);
+    Card c2(Card::RANK_TWO, Card::SUIT_HEARTS);
+
+    assert(c2 != c1);
 }
 
 //Tests Suit Next

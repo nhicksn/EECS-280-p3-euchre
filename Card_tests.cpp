@@ -41,6 +41,13 @@ TEST(get_suit_trump) {
     ASSERT_EQUAL(Card::SUIT_DIAMONDS, c.get_suit(trump));
 }
 
+TEST(get_suit_trump_left_bower) {
+    Card c(Card::RANK_JACK, Card::SUIT_CLUBS);
+    std::string trump = "Spades";
+
+    ASSERT_EQUAL(Card::SUIT_SPADES, c.get_suit(trump));
+}
+
 //Tests for Face or Ace
 //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
 

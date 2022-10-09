@@ -64,16 +64,36 @@ public:
     assert(round == 1 || round == 2);
     int trumpCounter = 0;
     std::string upTrump = upcard.get_suit(order_up_suit);
+    
+    //NEEDS TO BE FIXED, confused on how this works
+    //if round 1 and order suit and suit of upcard are equal then suit of upcard is trump
     if(round == 1) {
-      for(int i = 0; i < MAX_HAND_SIZE; i++) {
-        
+      if(upTrump == order_up_suit){
+        return(true);
       }
+    }
+    //if round 2, order up suit becomes trump
+    if(round == 2) {
+      upTrump = order_up_suit;
+
     }
   }
 
   //REQUIRES Player has at least one card
   //EFFECTS  Player adds one card to hand and removes one card from hand.
   void add_and_discard(const Card &upcard) override {
+    //checks if player has at least one card
+    for(int i = 0; i < MAX_HAND_SIZE; ++i){
+      if(hand[i].get_rank() != "null"); {
+         break;
+       }
+      if(i == (MAX_HAND_SIZE-1) && hand[i].get_rank() == "null"){
+      assert(false);
+      }
+
+      
+
+  }
 
 
   }
@@ -91,6 +111,21 @@ public:
   //EFFECTS  Plays one Card from Player's hand according to their strategy.
   //  The card is removed from the player's hand.
 Card play_card(const Card &led_card, const std::string &trump) override{
+  
+  //checks if player has at least one card
+  for(int i = 0; i < MAX_HAND_SIZE; ++i){
+    if(hand[i].get_rank() != "null"); {
+    break;
+    }
+    if(i == (MAX_HAND_SIZE-1) && hand[i].get_rank() == "null"){
+      assert(false);
+    }
+  }
+    //checks if trump is valid input
+   assert(trump == "Clubs" || trump == "Diamonds"
+               || trump == "Hearts" || trump == "Spades");
+
+
 
 
 }

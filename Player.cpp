@@ -100,7 +100,7 @@ public:
     if(trumpCounter == hand.size()) allTrump = true;
     if(!allTrump) {
       for(int i = 0; i < hand.size(); i++) {
-        if(hand[i] < lowestCard && hand[i].get_suit(trump) != trump) {
+        if(Card_less(hand[i], lowestCard, trump) && hand[i].get_suit(trump) != trump) {
           lowestCard = hand[i];
           lowestIndex = i;
         }
@@ -108,15 +108,15 @@ public:
     }
     else if(allTrump) {
       for(int i = 0; i < hand.size(); i++) {
-        if(hand[i] < lowestCard) {
+        if(Card_less(hand[i], lowestCard, trump)) {
           lowestCard = hand[i];
           lowestIndex = i;
         }
       }
     }
     
-    if(upcard < lowestCard) return;
-    else if(upcard > lowestCard) this->hand[lowestIndex] = upcard;
+    if(Card_less(upcard, lowestCard, trump)) return;
+    else if(Card_less(lowestCard, upcard, trump)) this->hand[lowestIndex] = upcard;
   }
 
  //REQUIRES Player has at least one card, trump is a valid suit

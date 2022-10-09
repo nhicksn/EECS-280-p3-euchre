@@ -177,7 +177,7 @@ TEST(test_simple_player_lead_card) {
 
   // Bob adds a card to his hand and discards one card
   bob->add_and_discard(
-    Card(Card::RANK_NINE, Card::SUIT_HEARTS) // upcard
+    Card(Card::RANK_NINE, Card::SUIT_SPADES) // upcard
   );
 
   // Bob leads

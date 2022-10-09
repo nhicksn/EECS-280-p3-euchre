@@ -114,7 +114,6 @@ public:
         }
       }
     }
-    
     if(Card_less(upcard, lowestCard, trump)) return;
     else if(Card_less(lowestCard, upcard, trump)) this->hand[lowestIndex] = upcard;
   }
@@ -141,7 +140,7 @@ public:
     if(trumpCounter == hand.size()) allTrump = true;
     if(allTrump) {
       for(int i = 0; i < hand.size(); i++) {
-        if(hand[i] > highestCard) {
+        if(Card_less(highestCard, hand[i], trump)) {
           highestCard = hand[i];
           highestIndex = i;
         }
@@ -149,7 +148,7 @@ public:
     }
     else if(!allTrump) {
       for(int i = 0; i < hand.size(); i++) {
-        if(hand[i] > highestCard && hand[i].get_suit(trump) != trump) {
+        if(Card_less(highestCard, hand[i], trump) && hand[i].get_suit(trump) != trump) {
           highestCard = hand[i];
           highestIndex = i;
         }

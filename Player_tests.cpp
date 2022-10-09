@@ -16,12 +16,14 @@ TEST(test_player_get_name_simple) {
     delete noah; 
 }
 
+
 TEST(test_player_get_name_human) {
     Player * noah = Player_factory("Noah", "Human");
     ASSERT_EQUAL("Noah", noah->get_name());
 
     delete noah; 
 }
+
 
 //Test get card
 //REQUIRES player has less than MAX_HAND_SIZE cards

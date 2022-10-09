@@ -138,6 +138,14 @@ public:
       }
     }
     if(trumpCounter == hand.size()) allTrump = true;
+    if(!allTrump) {
+      for(int i = 0; i < hand.size(); i++) {
+        if(hand[i].get_suit(trump) != trump) {
+          highestCard = hand[i];
+          break;
+        }
+      }
+    }
     if(allTrump) {
       for(int i = 0; i < hand.size(); i++) {
         if(Card_less(highestCard, hand[i], trump)) {

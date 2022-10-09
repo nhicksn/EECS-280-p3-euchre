@@ -111,8 +111,8 @@ public:
 
     std::vector<Card> hand = this->hand;
     Card highestCard = hand[0];
-    int highestIndex;
-    bool allTrump;
+    int highestIndex = 0;
+    bool allTrump = false;
     int trumpCounter = 0;
     for(int i = 0; i < hand.size(); i++) {
       if(hand[i].get_suit(trump) == trump) {

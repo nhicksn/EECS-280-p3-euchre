@@ -43,6 +43,7 @@ TEST(get_suit_trump) {
 
 //Tests for Face or Ace
 //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
+
 TEST(face_or_ace_king) {
     Card c(Card::RANK_KING, Card::SUIT_DIAMONDS);
 

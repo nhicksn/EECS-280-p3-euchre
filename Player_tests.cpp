@@ -16,14 +16,12 @@ TEST(test_player_get_name_simple) {
     delete noah; 
 }
 
-
 TEST(test_player_get_name_human) {
     Player * noah = Player_factory("Noah", "Human");
     ASSERT_EQUAL("Noah", noah->get_name());
 
     delete noah; 
 }
-
 
 //Test get card
 //REQUIRES player has less than MAX_HAND_SIZE cards
@@ -35,57 +33,58 @@ TEST(test_player_get_name_human) {
 //EFFECTS If Player wishes to order up a trump suit then return true and
 //  change order_up_suit to desired suit.  If Player wishes to pass, then do
 //  not modify order_up_suit and return false.
-TEST(test_player_make_trump_basic) {
-    Player * noah = Player_factory("Noah", "Simple");
-    Card upcard(Card::RANK_NINE, Card::SUIT_DIAMONDS);
-    bool is_dealer = false;
-    int round = 1;
-    std::string order_up_suit = "Diamonds";
-    
-    //simple player wants to order up trump suit, return true
-    assert(noah->make_trump(upcard, is_dealer, round, order_up_suit));
+TEST(test_simple_player_make_trump_basic) {
+  // Joe's hand
+  Player * joe = Player_factory("Joe", "Simple");
+  joe->add_card(Card(Card::RANK_NINE, Card::SUIT_SPADES));
+  joe->add_card(Card(Card::RANK_TEN, Card::SUIT_SPADES));
+  joe->add_card(Card(Card::RANK_QUEEN, Card::SUIT_SPADES));
+  joe->add_card(Card(Card::RANK_KING, Card::SUIT_SPADES));
+  joe->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
 
-    delete noah; 
+  // Joe makes trump
+  Card nine_spades(Card::RANK_NINE, Card::SUIT_SPADES);
+  string trump;
+  bool orderup = joe->make_trump(
+    nine_spades,    // Upcard
+    true,           // Joe is also the dealer
+    1,              // First round
+    trump           // Suit ordered up (if any)
+  );
+
+  // Verify Joe's order up and trump suit
+  ASSERT_TRUE(orderup);
+  ASSERT_EQUAL(trump, Card::SUIT_SPADES);
+
+  delete joe;
 }
 
-TEST(test_player_make_trump_pass) {
-    Player * noah = Player_factory("Noah", "Simple");
-    Card upcard(Card::RANK_NINE, Card::SUIT_DIAMONDS);
-    bool is_dealer = false;
-    int round = 1;
-    std::string order_up_suit = "Pass";
-    
-    //simple player wants to pass, return false
-    assert(!noah->make_trump(upcard, is_dealer, round, order_up_suit));
+TEST(test_simple_player_make_trump_basic_not_dealer) {
+  // Joe's hand
+  Player * joe = Player_factory("Joe", "Simple");
+  joe->add_card(Card(Card::RANK_NINE, Card::SUIT_SPADES));
+  joe->add_card(Card(Card::RANK_TEN, Card::SUIT_SPADES));
+  joe->add_card(Card(Card::RANK_QUEEN, Card::SUIT_SPADES));
+  joe->add_card(Card(Card::RANK_KING, Card::SUIT_SPADES));
+  joe->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
 
-    delete noah; 
+  // Joe makes trump
+  Card nine_spades(Card::RANK_NINE, Card::SUIT_SPADES);
+  string trump;
+  bool orderup = joe->make_trump(
+    nine_spades,    // Upcard
+    false,           // Joe is not the dealer
+    1,              // First round
+    trump           // Suit ordered up (if any)
+  );
+
+  // Verify Joe's order up and trump suit
+  ASSERT_TRUE(orderup);
+  ASSERT_EQUAL(trump, Card::SUIT_SPADES);
+
+  delete joe;
 }
 
-TEST(test_player_make_trump_second_round) {
-    Player * noah = Player_factory("Noah", "Simple");
-    Card upcard(Card::RANK_NINE, Card::SUIT_DIAMONDS);
-    bool is_dealer = false;
-    int round = 2;
-    std::string order_up_suit = "Hearts";
-    
-    //simple player wants to make trump hearts, return true
-    assert(noah->make_trump(upcard, is_dealer, round, order_up_suit));
-
-    delete noah; 
-}
-
-TEST(test_player_make_trump_second_round_dealer) {
-    Player * noah = Player_factory("Noah", "Simple");
-    Card upcard(Card::RANK_NINE, Card::SUIT_DIAMONDS);
-    bool is_dealer = true;
-    int round = 2;
-    std::string order_up_suit = "Hearts";
-    
-    //simple player is dealer, wants to make trump hearts, return true, called screw the dealer in specs
-    assert(noah->make_trump(upcard, is_dealer, round, order_up_suit));
-
-    delete noah; 
-}
 
 //Test add and discard
 

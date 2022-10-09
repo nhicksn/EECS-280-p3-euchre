@@ -166,6 +166,53 @@ TEST(test_simple_player_make_trump_round_2_not_dealer_has_opposite) {
 
 
 //Test lead card
+TEST(test_simple_player_lead_card) {
+  // Bob's hand
+  Player * bob = Player_factory("Bob", "Simple");
+  bob->add_card(Card(Card::RANK_NINE, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_TEN, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_QUEEN, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_KING, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+
+  // Bob adds a card to his hand and discards one card
+  bob->add_and_discard(
+    Card(Card::RANK_NINE, Card::SUIT_HEARTS) // upcard
+  );
+
+  // Bob leads
+  Card card_led = bob->lead_card(Card::SUIT_HEARTS);
+
+  // Verify the card Bob selected to lead
+  Card ace_spades(Card::RANK_ACE, Card::SUIT_SPADES);
+  ASSERT_EQUAL(card_led, ace_spades); //check led card
+
+  delete bob;
+}
+
+TEST(test_simple_player_all_trump) {
+  // Bob's hand
+  Player * bob = Player_factory("Bob", "Simple");
+  bob->add_card(Card(Card::RANK_TEN, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_QUEEN, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_KING, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_JACK, Card::SUIT_SPADES));
+
+  // Bob adds a card to his hand and discards one card
+  bob->add_and_discard(
+    Card(Card::RANK_NINE, Card::SUIT_SPADES) // upcard
+  );
+
+  // Bob leads
+  Card card_led = bob->lead_card(Card::SUIT_SPADES);
+
+  // Verify the card Bob selected to lead
+  Card ace_spades(Card::RANK_JACK, Card::SUIT_SPADES);
+  ASSERT_EQUAL(card_led, ace_spades); //check led card
+
+  delete bob;
+}
 
 
 //Test play card

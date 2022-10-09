@@ -90,12 +90,31 @@ public:
     std::string trump = upcard.get_suit();
     Card lowestCard = hand[0];
     int lowestIndex = 0;
+    bool allTrump = false;
+    int trumpCounter = 0;
     for(int i = 0; i < hand.size(); i++) {
-      if(hand[i] < lowestCard) {
-        lowestCard = hand[i];
-        lowestIndex = i;
+      if(hand[i].get_suit(trump) == trump) {
+        trumpCounter++;
       }
     }
+    if(trumpCounter == hand.size()) allTrump = true;
+    if(!allTrump) {
+      for(int i = 0; i < hand.size(); i++) {
+        if(hand[i] < lowestCard && hand[i].get_suit(trump) != trump) {
+          lowestCard = hand[i];
+          lowestIndex = i;
+        }
+      }
+    }
+    else if(allTrump) {
+      for(int i = 0; i < hand.size(); i++) {
+        if(hand[i] < lowestCard) {
+          lowestCard = hand[i];
+          lowestIndex = i;
+        }
+      }
+    }
+    
     if(upcard < lowestCard) return;
     else if(upcard > lowestCard) this->hand[lowestIndex] = upcard;
   }

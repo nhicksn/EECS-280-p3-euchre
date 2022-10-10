@@ -229,6 +229,27 @@ TEST(add_and_discard_discard) {
   delete bob;
 }
 
+TEST(add_and_discard_discard_all_trump) {
+  Player * bob = Player_factory("Bob", "Simple");
+  bob->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_JACK, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_KING, Card::SUIT_CLUBS));
+  bob->add_card(Card(Card::RANK_QUEEN, Card::SUIT_CLUBS));
+  bob->add_card(Card(Card::RANK_TEN, Card::SUIT_CLUBS));
+  bob->add_and_discard(Card(Card::RANK_JACK, Card::SUIT_CLUBS));
+  Card c1 = bob->play_card(Card(Card(Card::RANK_TWO, Card::SUIT_CLUBS)), Card::SUIT_CLUBS);
+  Card c2 = bob->play_card(Card(Card(Card::RANK_TWO, Card::SUIT_CLUBS)), Card::SUIT_CLUBS);
+  Card c3 = bob->play_card(Card(Card(Card::RANK_TWO, Card::SUIT_CLUBS)), Card::SUIT_CLUBS);
+  Card c4 = bob->play_card(Card(Card(Card::RANK_TWO, Card::SUIT_CLUBS)), Card::SUIT_CLUBS);
+  Card c5 = bob->play_card(Card(Card(Card::RANK_TWO, Card::SUIT_CLUBS)), Card::SUIT_CLUBS);
+  ASSERT_EQUAL(c1, Card(Card::RANK_JACK, Card::SUIT_CLUBS));
+  ASSERT_EQUAL(c2, Card(Card::RANK_JACK, Card::SUIT_SPADES));
+  ASSERT_EQUAL(c3, Card(Card::RANK_KING, Card::SUIT_CLUBS));
+  ASSERT_EQUAL(c4, Card(Card::RANK_QUEEN, Card::SUIT_CLUBS));
+  ASSERT_EQUAL(c5, Card(Card::RANK_TEN, Card::SUIT_CLUBS));
+  delete bob;
+}
+
 TEST(add_and_discard_same) {
   Player * bob = Player_factory("Bob", "Simple");
   bob->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));

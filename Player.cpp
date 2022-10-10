@@ -235,6 +235,11 @@ public:
     return this->name;
   }
 
+  //EFFECTS returns player's hand
+  const std::vector<Card> &get_hand() { //no override bc not base class
+    return this->hand;
+  }
+
   //REQUIRES player has less than MAX_HAND_SIZE cards
   //EFFECTS  adds Card c to Player's hand
   void add_card(const Card &c) override {

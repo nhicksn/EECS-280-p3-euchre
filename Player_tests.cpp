@@ -164,7 +164,6 @@ TEST(test_simple_player_make_trump_round_2_not_dealer_has_opposite) {
 
 //Test add and discard
 
-
 //Test lead card
 TEST(test_simple_player_lead_card) {
   // Bob's hand
@@ -341,6 +340,29 @@ TEST(test_simple_player_play_card_has_all_led_suit) {
 
   // Verify the card Bob played
   ASSERT_EQUAL(card_played, Card(Card::RANK_ACE, Card::SUIT_DIAMONDS));
+  delete bob;
+}
+
+//Test cout operator
+TEST(test_simple_cout) {
+  Player * bob = Player_factory("Bob", "Simple");
+  ostringstream s; 
+
+  s << bob->get_name();
+  ostringstream test;
+  test << "Bob";
+  ASSERT_EQUAL(s.str(), test.str());
+  delete bob;
+}
+
+TEST(test_human_cout) {
+  Player * bob = Player_factory("Bob", "Human");
+  ostringstream s;
+
+  s << bob->get_name();
+  ostringstream test;
+  test << "Bob";
+  ASSERT_EQUAL(s.str(), test.str());
   delete bob;
 }
 

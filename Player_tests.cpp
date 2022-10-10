@@ -451,6 +451,27 @@ TEST(test_simple_player_play_card_has_two_led_suit) {
   delete bob;
 }
 
+TEST(test_simple_player_play_card_has_one_led_and_trump) {
+  // Bob's hand
+  Player * bob = Player_factory("Bob", "Simple");
+  bob->add_card(Card(Card::RANK_NINE, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_TEN, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_QUEEN, Card::SUIT_DIAMONDS));
+  bob->add_card(Card(Card::RANK_QUEEN, Card::SUIT_CLUBS));
+  bob->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+
+  // Bob plays a card
+  Card nine_diamonds(Card::RANK_QUEEN, Card::SUIT_DIAMONDS);
+  Card card_played = bob->play_card(
+    nine_diamonds,  // Nine of Diamonds is led
+    "Clubs"        // Trump suit
+  ); 
+
+  // Verify the card Bob played
+  ASSERT_EQUAL(card_played, Card(Card::RANK_QUEEN, Card::SUIT_DIAMONDS));
+  delete bob;
+}
+
 TEST(test_simple_player_play_card_has_all_led_suit_trump) {
   // Bob's hand
   Player * bob = Player_factory("Bob", "Simple");

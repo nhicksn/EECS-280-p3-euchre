@@ -19,6 +19,7 @@ private:
 public:
   SimplePlayer(const std::string &nameInput) {
     this->name = nameInput;
+    this->hand = {};
   }
 
   //EFFECTS returns player's name
@@ -183,13 +184,14 @@ Card play_card(const Card &led_card, const std::string &trump) override {
   for(int i = 0; i < hand.size(); i++) {
     if(hand[i].get_suit(trump) == ledSuit) {
       canFollow = true;
+      break;
     }
   }
   Card highestCard = hand[0];
   Card lowestCard = hand[0];
   if(canFollow) {
     for(int i = 0; i < hand.size(); i++) {
-      if(hand[i] > highestCard && hand[i].get_suit(trump) == ledSuit) {
+      if(Card_less(highestCard, hand[i], trump) && hand[i].get_suit(trump) == ledSuit) {
         highestCard = hand[i];
         index = i;
       }
@@ -199,7 +201,7 @@ Card play_card(const Card &led_card, const std::string &trump) override {
   }
   else if(!canFollow) {
     for(int i = 0; i < hand.size(); i++) {
-      if(hand[i] < lowestCard) {
+      if(Card_less(hand[i], lowestCard, trump)) {
         lowestCard = hand[i];
         index = i;
       }

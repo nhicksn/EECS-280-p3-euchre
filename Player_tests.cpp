@@ -46,6 +46,18 @@ TEST(test_add_card) {
   delete bob;
 }
 
+TEST(test_add_card_twice) {
+  Player * bob = Player_factory("Bob", "Simple");
+  bob->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_NINE, Card::SUIT_DIAMONDS));
+
+  Card c = bob->play_card(Card(Card()), Card::SUIT_SPADES);
+  Card c2 = bob->play_card(Card(Card()), Card::SUIT_DIAMONDS);
+  ASSERT_EQUAL(c, Card(Card::RANK_ACE, Card::SUIT_SPADES));
+  ASSERT_EQUAL(c2, Card(Card::RANK_NINE, Card::SUIT_DIAMONDS));
+  delete bob;
+}
+
 //Test make trump
 //REQUIRES round is 1 or 2
 //MODIFIES order_up_suit

@@ -229,6 +229,16 @@ TEST(add_and_discard_discard) {
   delete bob;
 }
 
+TEST(add_and_discard_same) {
+  Player * bob = Player_factory("Bob", "Simple");
+  bob->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+  bob->add_card(Card(Card::RANK_JACK, Card::SUIT_SPADES));
+  bob->add_and_discard(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+  Card c = bob->play_card(Card(Card(Card::RANK_NINE, Card::SUIT_DIAMONDS)), Card::SUIT_SPADES);
+  ASSERT_EQUAL(c, Card(Card::RANK_ACE, Card::SUIT_SPADES));
+  delete bob;
+}
+
 TEST(add_and_discard_add) {
   Player * bob = Player_factory("Bob", "Simple");
   bob->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));

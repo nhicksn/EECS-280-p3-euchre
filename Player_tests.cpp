@@ -11,16 +11,12 @@ using namespace std;
 TEST(test_simple_ctor) {
   Player * bob = Player_factory("Bob", "Simple");
   ASSERT_EQUAL("Bob", bob->get_name());
-  std::string type = typeid(*bob).name();
-  ASSERT_EQUAL(type, "12SimplePlayer");
   delete bob;
 }
 
 TEST(test_human_ctor) {
   Player * bob = Player_factory("Bob", "Human");
   ASSERT_EQUAL("Bob", bob->get_name());
-  std::string type = typeid(*bob).name();
-  ASSERT_EQUAL(type, "11HumanPlayer")
   delete bob;
 }
 

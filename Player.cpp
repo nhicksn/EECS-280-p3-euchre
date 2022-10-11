@@ -53,9 +53,7 @@ public:
 
     if(round == 1) {
       for(int i = 0; i < hand.size(); i++) {
-        if((hand[i].get_suit(upTrump) == upTrump) && (hand[i].get_rank() == Card::RANK_JACK || 
-        hand[i].get_rank() == Card::RANK_QUEEN || hand[i].get_rank() == Card::RANK_KING ||
-        hand[i].get_rank() == Card::RANK_ACE)) {
+        if((hand[i].get_suit(upTrump) == upTrump) && (hand[i].is_face_or_ace())) {
           trumpCounter++;
         }
       }
@@ -69,9 +67,7 @@ public:
       trumpCounter = 0;
       std::string sameColor = Suit_next(upTrump);
       for(int i = 0; i < hand.size(); i++) {
-        if((hand[i].get_suit(sameColor) == sameColor) && (hand[i].get_rank() == Card::RANK_JACK || 
-        hand[i].get_rank() == Card::RANK_QUEEN || hand[i].get_rank() == Card::RANK_KING ||
-        hand[i].get_rank() == Card::RANK_ACE)) {
+        if((hand[i].get_suit(sameColor) == sameColor) &&  (hand[i].is_face_or_ace())) {
           trumpCounter++;
         }
       }
@@ -309,13 +305,11 @@ public:
   //  "Lead" means to play the first Card in a trick.  The card
   //  is removed the player's hand.
   Card lead_card(const std::string &trump) override {
-    std::string play;
     int playInt;
     std::sort(hand.begin(), hand.end());
     print_hand();
     std::cout << "Human player " << name << ", please select a card:\n";
-    std::cin >> play;
-    playInt = stoi(play);
+    std::cin >> playInt;
     Card playCard;
     for(int i = 0; i < this->hand.size(); i++) {
       if(playInt == i) {
@@ -330,22 +324,8 @@ public:
   //EFFECTS  Plays one Card from Player's hand according to their strategy.
   //  The card is removed from the player's hand.
   Card play_card(const Card &led_card, const std::string &trump) override {
-    std::string play;
-    int playInt;
-    std::sort(hand.begin(), hand.end());
-    print_hand();
-    std::cout << "Human player " << name << ", please select a card:\n";
-    std::cin >> play;
-    playInt = stoi(play);
-    Card playCard;
-    for(int i = 0; i < this->hand.size(); i++) {
-      if(playInt == i) {
-        playCard = this->hand[i];
-        this->hand.erase(this->hand.begin() + i);
-        return playCard;
-      }
-    }
-    return this->hand[0];
+    Card play = this->lead_card(trump);
+    return play;
   }
   
 };

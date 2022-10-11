@@ -260,8 +260,10 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card,
         }
         else return false;
     }
-    else if((aSuit == ledSuit || aSuit == trump) && (bSuit != ledSuit && bSuit != trump)) return false;
-    else if((aSuit != ledSuit && aSuit != trump) && (bSuit == ledSuit || bSuit == trump)) return true;
+    else if((aSuit == ledSuit || aSuit == trump) && 
+    (bSuit != ledSuit && bSuit != trump)) return false;
+    else if((aSuit != ledSuit && aSuit != trump) && 
+    (bSuit == ledSuit || bSuit == trump)) return true;
 
     assert(false);
 }

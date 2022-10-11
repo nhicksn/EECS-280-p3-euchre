@@ -53,10 +53,10 @@ int main(int argc, char *argv[]) {
     string playerThreeName = (argv[10]);
     string playerThreeType = (argv[11]);
 
-    if(playerZeroName != "Simple" || playerZeroName != "Human" 
-    || playerOneName != "Simple" || playerOneName != "Human" 
-    || playerTwoName != "Simple" || playerTwoName != "Human"
-    || playerThreeName != "Simple" || playerThreeName != "Human"){
+    if(playerZeroType != "Simple" || playerZeroType != "Human" 
+    || playerOneType != "Simple" || playerOneType != "Human" 
+    || playerTwoType != "Simple" || playerTwoType != "Human"
+    || playerThreeType != "Simple" || playerThreeType != "Human"){
         cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
      << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
      << "NAME4 TYPE4" << endl;

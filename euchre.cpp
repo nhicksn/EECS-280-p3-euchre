@@ -1,6 +1,7 @@
 // Project UID 1d9f47bfc76643019cfbf037641defe1
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <cassert>
 #include <array>
@@ -15,7 +16,7 @@ using namespace std;
 int main(int argc, char *argv[]) {
 
     //argv 1: pack.in
-    string pack = (argv[1]);
+    string pack_filename = (argv[1]);
 
     //argv 2: points to win game -- can be between 1 and 100 inclusive
     int pointsToWin = atoi(argv[2]);
@@ -60,6 +61,16 @@ int main(int argc, char *argv[]) {
      << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
      << "NAME4 TYPE4" << endl;
     }
+
+    //read in input file
+    ifstream fin;
+    fin.open(pack_filename);
+
+    //check for error
+    if(!fin.is_open()){
+         cout << "Error opening " << pack_filename << endl;
+    return 1;
+}
 
 
 }

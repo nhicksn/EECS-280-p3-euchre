@@ -24,12 +24,12 @@ private:
     int team1TotalScore;
     // team two is players 1 and 3
     int team2TotalScore;
-    int handNum;
+    int handNum = 0;
 
 
     void deal(int dealerIndex) {
         cout << "Hand " << handNum << endl;
-        cout << players[dealerIndex] << " deals" << endl;
+        cout << *players[dealerIndex] << " deals" << endl;
         int first = (dealerIndex + 1) % 4;
         for(int i = first; i < first + 4; i++) {
             if(i == first || i == first + 2) {

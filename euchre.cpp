@@ -24,9 +24,12 @@ private:
     int team1TotalScore;
     // team two is players 1 and 3
     int team2TotalScore;
+    int handNum;
 
 
     void deal(int dealerIndex) {
+        cout << "Hand " << handNum << endl;
+        cout << players[dealerIndex] << " deals" << endl;
         int first = (dealerIndex + 1) % 4;
         for(int i = first; i < first + 4; i++) {
             if(i == first || i == first + 2) {
@@ -57,6 +60,8 @@ private:
             }
         }
         this->upcard = this->deck.deal_one();
+        cout << upcard << " turned up" << endl;
+        handNum++;
     }
 
     void make_trump(int indexDealer, string orderUpSuit) {
@@ -69,12 +74,12 @@ private:
                     done = players[z]->make_trump(this->upcard, true, i, orderUpSuit);
                 }
                 else {
-                    done = players[z]->make_trump(this->upcard, false, z, orderUpSuit);
+                    done = players[z]->make_trump(this->upcard, false, i, orderUpSuit);
                 }
                 if(done == true) {
-                players[indexDealer]->add_and_discard(this->upcard);
-                orderUpIndex = z;
-                return;
+                    players[indexDealer]->add_and_discard(this->upcard);
+                    orderUpIndex = z;
+                    return;
                 }
             }            
         }
@@ -151,7 +156,7 @@ public:
         this->team2TotalScore = 0;
     }
 
-    void play(string shuffleToggle, ifstream pack) {
+    void play(string shuffleToggle, ifstream &pack) {
         // first we need to shuffle or reset the deck
         if(shuffleToggle == "shuffle") {
             this->deck.shuffle();
@@ -166,11 +171,13 @@ public:
             deal(dealerIndex);
             make_trump(dealerIndex, orderUpSuit);
             play_hand(dealerIndex);
-            if(team1TotalScore >= winPoints) {
-                playBool == false;
+            if(this->team1TotalScore >= this->winPoints) {
+                playBool = false;
+                cout << *players[0] << " and " << *players[2] << " win!" << endl;
             }
-            else if(team2TotalScore >= winPoints) {
-                playBool == false;
+            else if(this->team2TotalScore >= this->winPoints) {
+                playBool = false;
+                cout << *players[1] << " and " << *players[3] << " win!" << endl;
             }
             dealerIndex++;
         }
@@ -183,19 +190,19 @@ int main(int argc, char *argv[]) {
     string pack_filename = (argv[1]);
 
     // argv 2: points to win game -- can be between 1 and 100 inclusive
-    int pointsToWin = atoi(argv[2]);
+    int pointsToWin = atoi(argv[3]);
 
     if (pointsToWin < 1 || pointsToWin > 100) {
-        cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
+        cout << "1 Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
             << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
             << "NAME4 TYPE4" << endl;
     }
 
     // argv 3: shuffle toggle, use "noshuffle" to turn off shuffling
-    string shuffleToggle = (argv[3]);
+    string shuffleToggle = (argv[2]);
 
-    if (shuffleToggle != "shuffle" || shuffleToggle != "noshuffle") {
-        cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
+    if (shuffleToggle != "shuffle" && shuffleToggle != "noshuffle") {
+        cout << "2 Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
             << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
             << "NAME4 TYPE4" << endl;
     }
@@ -217,14 +224,19 @@ int main(int argc, char *argv[]) {
     string playerThreeName = (argv[10]);
     string playerThreeType = (argv[11]);
 
-    if (playerZeroType != "Simple" || playerZeroType != "Human" || playerOneType != 
-        "Simple" || playerOneType != "Human" || playerTwoType != "Simple" || 
-        playerTwoType != "Human" || playerThreeType != "Simple" || 
-        playerThreeType != "Human") {
-        cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
+    if ((playerZeroType != "Simple" && playerZeroType != "Human") || (playerOneType != 
+        "Simple" && playerOneType != "Human") || (playerTwoType != "Simple" && 
+        playerTwoType != "Human") || (playerThreeType != "Simple" && 
+        playerThreeType != "Human")) {
+        cout << "3 Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
             << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
             << "NAME4 TYPE4" << endl;
     }
+    Player* playerZero = Player_factory(playerZeroName, playerZeroType);
+    Player* playerOne = Player_factory(playerOneName, playerOneType);
+    Player* playerTwo = Player_factory(playerTwoName, playerTwoType);
+    Player* playerThree = Player_factory(playerThreeName, playerThreeType);
+    vector<Player*> players= {playerZero, playerOne, playerTwo, playerThree};
 
     // read in input file
     ifstream fin;
@@ -235,5 +247,11 @@ int main(int argc, char *argv[]) {
         cout << "Error opening " << pack_filename << endl;
         return 1;
     }
+    Pack deck(fin);
+    Game game(players, deck, pointsToWin);
+    game.play(shuffleToggle, fin);
+    for (size_t i = 0; i < players.size(); ++i) {
+        delete players[i];
+    }  
 }
 

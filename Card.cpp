@@ -248,11 +248,11 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card,
                const std::string &trump) {
     assert(trump == "Clubs" || trump == "Diamonds"
             || trump == "Hearts" || trump == "Spades");
-    std::string ledSuit = led_card.get_suit();
-    std::string aSuit = a.get_suit();
-    std::string bSuit = b.get_suit();
+    std::string ledSuit = led_card.get_suit(trump);
+    std::string aSuit = a.get_suit(trump);
+    std::string bSuit = b.get_suit(trump);
     std::string aRank = a.get_rank();
-    std::string bRank = b.get_suit();
+    std::string bRank = b.get_rank();
     if(a == b) return false;
     if(aSuit != ledSuit && bSuit != ledSuit) {
         if(Card_less(a, b, trump)) {
@@ -264,6 +264,18 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card,
     (bSuit != ledSuit && bSuit != trump)) return false;
     else if((aSuit != ledSuit && aSuit != trump) && 
     (bSuit == ledSuit || bSuit == trump)) return true;
+    else if(aSuit == ledSuit && bSuit == ledSuit) {
+        if(Card_less(a, b, trump)) {
+            return true;
+        }
+        else return false;
+    }
+    else if(aSuit == trump && bSuit != trump) {
+        return false;
+    }
+    else if(aSuit != trump && bSuit == trump) {
+        return true;
+    }
 
     assert(false);
 }

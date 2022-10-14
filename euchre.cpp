@@ -22,9 +22,12 @@ private:
     int orderUpIndex;
     // team one is players 0 and 2
     int team1TotalScore;
+    int team1Wins;
     // team two is players 1 and 3
     int team2TotalScore;
-    int handNum = 0;
+    int team2Wins;
+    int handNum;
+    string orderUpSuit;
 
 
     void deal(int dealerIndex) {
@@ -76,8 +79,16 @@ private:
                 else {
                     done = players[z]->make_trump(this->upcard, false, i, orderUpSuit);
                 }
+                if(done == false) {
+                    cout << *players[z] << " passes" << endl;
+                }
                 if(done == true) {
-                    players[indexDealer]->add_and_discard(this->upcard);
+                    this->orderUpSuit = orderUpSuit;
+                    cout << *players[z] << " orders up " << orderUpSuit << endl;
+                    cout << "\n";
+                    if(i == 1) {
+                        players[indexDealer]->add_and_discard(this->upcard);
+                    }
                     orderUpIndex = z;
                     return;
                 }
@@ -87,64 +98,86 @@ private:
     }
     void play_hand(int indexDealer) {
         int lead = (indexDealer + 1) % 4;
-        int team1Score = 0;
-        int team1Wins = 0;
-        int team2Score = 0;
-        int team2Wins = 0;
-        string trump = upcard.get_suit();
+        //int team1Wins = 0;
+        //int team2Wins = 0;
         for(int i = 0; i < 5; i++) {
-            Card leadCard = players[lead]->lead_card(trump);
-            Card card1 = players[(lead + 1) % 4]->play_card(leadCard, trump);
-            Card card2 = players[(lead + 2) % 4]->play_card(leadCard, trump);
-            Card card3 = players[(lead + 3) % 4]->play_card(leadCard, trump);
+            Card leadCard = players[lead]->lead_card(orderUpSuit);
+            cout << leadCard << " led by " << *players[lead] << endl;
+            Card card1 = players[(lead + 1) % 4]->play_card(leadCard, orderUpSuit);
+            cout << card1 << " played by " << *players[(lead + 1) % 4] << endl;
+            Card card2 = players[(lead + 2) % 4]->play_card(leadCard, orderUpSuit);
+            cout << card2 << " played by " << *players[(lead + 2) % 4] << endl;
+            Card card3 = players[(lead + 3) % 4]->play_card(leadCard, orderUpSuit);
+            cout << card3 << " played by " << *players[(lead + 3) % 4] << endl;
             Card highestCard = leadCard;
-            if(Card_less(highestCard, card1, trump)) {
-                highestCard = card1;
-                lead = (lead + 1) % 4;
+            if(Card_less(highestCard, card1, leadCard, orderUpSuit)) {
+                highestCard = card1;} 
+            if(Card_less(highestCard, card2, leadCard, orderUpSuit)) {
+                highestCard = card2;}
+            if(Card_less(highestCard, card3, leadCard, orderUpSuit)) {
+                highestCard = card3;}
+            vector<Card> cards = {leadCard, card1, card2, card3};
+            for(int j = 0; j < 4; j++) {
+                if(cards[j] == highestCard) {
+                    lead = (lead + j) % 4;
+                }
             }
-            if(Card_less(highestCard, card2, trump)) {
-                highestCard = card2;
-                lead = (lead + 2) % 4;
-            }
-            if(Card_less(highestCard, card3, trump)) {
-                highestCard = card3;
-                lead = (lead + 3) % 4;
-            }
-            if(lead == 0 || lead == 2) {
-                team1Wins++;
-            }
-            else if(lead == 1 || lead == 3) {
-                team2Wins++;
-            }
+            if(lead == 0 || lead == 2) {this->team1Wins++;}
+            else if(lead == 1 || lead == 3) {this->team2Wins++;}
+            for(int i = 0; i < 4; i++){
+                if(lead == i){
+                    cout << *players[i] << " takes the trick" << endl;
+                    cout << "\n";}}
         }
-        if(team1Wins >= 3) {
-            if(team1Wins == 5) {
-                team1Score += 2;
+    }
+    void count_score() {
+        bool team1OrderedUp = false;
+        bool team2OrderedUp = false;
+        if(this->orderUpIndex == 1 || this->orderUpIndex == 3) {
+            team2OrderedUp = true;
+        }
+        else team1OrderedUp = true;
+        if(this->team1Wins >= 3) {
+            cout << *players[0] << " and " << *players[2] << " win the hand" << endl;
+            if(team1OrderedUp == false) {
+                this->team1TotalScore += 2;
+                cout << "euchred!" << endl;
             }
             else {
-                if(orderUpIndex == 1 || orderUpIndex == 3) {
-                    team1Score += 2;
+                if(team1Wins == 5) {
+                    this->team1TotalScore += 2;
+                    cout << "march!" << endl;
                 }
                 else {
-                    team1Score += 1;
+                    this->team1TotalScore += 1;
                 }
             }
         }
-        if(team2Wins >= 3) {
-            if(team2Wins == 5) {
-                team2Score += 2;
+        if(this->team2Wins >= 3) {
+            cout << *players[1] << " and " << *players[3] << " win the hand" << endl;
+            if(team2OrderedUp == false) {
+                this->team2TotalScore += 2;
+                cout << "euchred!" << endl;
             }
             else {
-                if(orderUpIndex == 0 || orderUpIndex == 2) {
-                    team2Score += 2;
+                if(team2Wins == 5) {
+                    this->team2TotalScore += 2;
+                    cout << "march!" << endl;
                 }
                 else {
-                    team2Score += 1;
+                    this->team2TotalScore += 1;
                 }
             }
         }
-        team1TotalScore += team1Score;
-        team2TotalScore += team2Score;
+        cout << *players[0] << " and " << *players[2] << " have " << team1TotalScore << 
+        " points" << endl;
+        cout << *players[1] << " and " << *players[3] << " have " << team2TotalScore << 
+        " points" << endl;
+        cout << "\n";
+        this->team1Wins = 0;
+        this->team2Wins = 0;
+//        team1TotalScore += team1Score;
+//        team2TotalScore += team2Score;
     }
 
 public:
@@ -154,6 +187,9 @@ public:
         this->winPoints = winPointsIn;
         this->team1TotalScore = 0;
         this->team2TotalScore = 0;
+        this->handNum = 0;
+        this->team1Wins = 0;
+        this->team2Wins = 0;
     }
 
     void play(string shuffleToggle, ifstream &pack) {
@@ -171,6 +207,7 @@ public:
             deal(dealerIndex);
             make_trump(dealerIndex, orderUpSuit);
             play_hand(dealerIndex);
+            count_score();
             if(this->team1TotalScore >= this->winPoints) {
                 playBool = false;
                 cout << *players[0] << " and " << *players[2] << " win!" << endl;
@@ -254,4 +291,3 @@ int main(int argc, char *argv[]) {
         delete players[i];
     }  
 }
-

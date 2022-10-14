@@ -124,7 +124,7 @@ public:
             || trump == "Hearts" || trump == "Spades");
 
     std::vector<Card> hand = this->hand;
-    Card highestCard = hand[0];
+    Card highestCard = Card();
     int highestIndex = 0;
     bool allTrump = false;
     int trumpCounter = 0;
@@ -138,6 +138,7 @@ public:
       for(int i = 0; i < hand.size(); i++) {
         if(hand[i].get_suit(trump) != trump) {
           highestCard = hand[i];
+          highestIndex = i;
           break;
         }
       }
@@ -182,11 +183,12 @@ Card play_card(const Card &led_card, const std::string &trump) override {
       break;
     }
   }
-  Card highestCard = hand[0];
+  Card highestCard = Card(Card::RANK_TWO, ledSuit);
   Card lowestCard = hand[0];
   if(canFollow) {
     for(int i = 0; i < hand.size(); i++) {
-      if(Card_less(highestCard, hand[i], trump) && hand[i].get_suit(trump) == ledSuit) {
+      if(Card_less(highestCard, hand[i], led_card, trump) && 
+      hand[i].get_suit(trump) == ledSuit) {
         highestCard = hand[i];
         index = i;
       }

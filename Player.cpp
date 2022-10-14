@@ -62,7 +62,6 @@ public:
         return true;
       }
     }
-    //if round 2, order up suit becomes trump
     if(round == 2) {
       trumpCounter = 0;
       std::string sameColor = Suit_next(upTrump);

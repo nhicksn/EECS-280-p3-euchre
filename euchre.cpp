@@ -32,7 +32,7 @@ private:
 
     void deal(int dealerIndex) {
         cout << "Hand " << handNum << endl;
-        cout << *players[dealerIndex] << " deals" << endl;
+        cout << *players[dealerIndex % 4] << " deals" << endl;
         int first = (dealerIndex + 1) % 4;
         for(int i = first; i < first + 4; i++) {
             if(i == first || i == first + 2) {
@@ -82,13 +82,18 @@ private:
                 if(done == false) {
                     cout << *players[z] << " passes" << endl;
                 }
-                if(done == true) {
+                if(done == true && i == 2) {
                     this->orderUpSuit = orderUpSuit;
                     cout << *players[z] << " orders up " << orderUpSuit << endl;
                     cout << "\n";
-                    if(i == 1) {
-                        players[indexDealer]->add_and_discard(this->upcard);
-                    }
+                    orderUpIndex = z;
+                    return;
+                }
+                if(done == true && i == 1) {
+                    this->orderUpSuit = orderUpSuit;
+                    cout << *players[z] << " orders up " << orderUpSuit << endl;
+                    cout << "\n";
+                    players[indexDealer % 4]->add_and_discard(this->upcard);
                     orderUpIndex = z;
                     return;
                 }
@@ -176,8 +181,6 @@ private:
         cout << "\n";
         this->team1Wins = 0;
         this->team2Wins = 0;
-//        team1TotalScore += team1Score;
-//        team2TotalScore += team2Score;
     }
 
 public:
@@ -194,16 +197,18 @@ public:
 
     void play(string shuffleToggle, ifstream &pack) {
         // first we need to shuffle or reset the deck
-        if(shuffleToggle == "shuffle") {
-            this->deck.shuffle();
-        }
-        else {
-            Pack deck(pack);
-        }
+        
         bool playBool = true;
         int dealerIndex = 0;
         string orderUpSuit;
         while(playBool == true) {
+            if(shuffleToggle == "shuffle") {
+                this->deck.shuffle();
+            }
+            else {
+                Pack deck(pack);
+            }
+            deck.reset();
             deal(dealerIndex);
             make_trump(dealerIndex, orderUpSuit);
             play_hand(dealerIndex);
@@ -225,8 +230,7 @@ int main(int argc, char *argv[]) {
 
     // argv 1: pack.in
     string pack_filename = (argv[1]);
-
-    // argv 2: points to win game -- can be between 1 and 100 inclusive
+    // argv 3: points to win game -- can be between 1 and 100 inclusive
     int pointsToWin = atoi(argv[3]);
 
     if (pointsToWin < 1 || pointsToWin > 100) {
@@ -235,9 +239,8 @@ int main(int argc, char *argv[]) {
             << "NAME4 TYPE4" << endl;
     }
 
-    // argv 3: shuffle toggle, use "noshuffle" to turn off shuffling
+    // argv 2: shuffle toggle, use "noshuffle" to turn off shuffling
     string shuffleToggle = (argv[2]);
-
     if (shuffleToggle != "shuffle" && shuffleToggle != "noshuffle") {
         cout << "2 Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
             << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
@@ -248,6 +251,7 @@ int main(int argc, char *argv[]) {
     // argv 4-5: name and type of player 0
     string playerZeroName = (argv[4]);
     string playerZeroType = (argv[5]);
+ 
 
     // argv 6-7: name and type of player 1
     string playerOneName = (argv[6]);
@@ -284,10 +288,18 @@ int main(int argc, char *argv[]) {
         cout << "Error opening " << pack_filename << endl;
         return 1;
     }
+
+    cout << "./euchre.exe " << pack_filename << " " << shuffleToggle << " " <<
+    pointsToWin << " " << playerZeroName << " " << playerZeroType << " ";
+
+    cout << playerOneName << " " << playerOneType << " " << playerTwoName << " " 
+    << playerTwoType << " " << playerThreeName << " " << playerOneType << " " << endl;
+
     Pack deck(fin);
     Game game(players, deck, pointsToWin);
     game.play(shuffleToggle, fin);
     for (size_t i = 0; i < players.size(); ++i) {
         delete players[i];
-    }  
+    }
+    fin.close();
 }

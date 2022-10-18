@@ -217,10 +217,11 @@ class HumanPlayer: public Player {
 private:
   std::string name;
   std::vector<Card> hand;
-  void print_hand() const {
-    for(size_t i=0; i < this->hand.size(); ++i) {
+  void print_hand(vector<Card> &handInput) const {
+    std::sort(handInput.begin(), handInput.end());
+    for(size_t i=0; i < handInput.size(); ++i) {
       std::cout << "Human player " << this->name << "'s hand: "
-           << "[" << i << "] " << this->hand[i] << "\n";
+           << "[" << i << "] " << handInput[i] << "\n";
     }
   }
 public:
@@ -253,11 +254,10 @@ public:
   //  not modify order_up_suit and return false.
   bool make_trump(const Card &upcard, bool is_dealer,
                   int round, std::string &order_up_suit) const override {
-    std::vector<Card> hand = this->hand;
+    std::vector<Card> handInput = this->hand;
     std::string playerChoice;
-    std::sort(hand.begin(), hand.end());
-    print_hand();
-    std::cout << "Human player " << name << ", please enter a suit, or pass\n";
+    print_hand(handInput);
+    std::cout << "Human player " << name << ", please enter a suit, or \"pass\":\n";
     std::cin >> playerChoice;
     if(playerChoice == "Spades") {
       order_up_suit = "Spades";
@@ -275,7 +275,7 @@ public:
       order_up_suit = "Diamonds";
       return true;
     }
-    else if(playerChoice == "Pass") {
+    else if(playerChoice == "pass") {
       return false;
     }
     return false;
@@ -284,20 +284,19 @@ public:
   //REQUIRES Player has at least one card
   //EFFECTS  Player adds one card to hand and removes one card from hand.
   void add_and_discard(const Card &upcard) override {
-    std::string discard;
-    std::vector<Card> hand = this->hand;
-    std::sort(hand.begin(), hand.end());
-    print_hand();
+    int discard;
+    std::vector<Card> handInput = this->hand;
+    print_hand(handInput);
     std::cout << "Discard upcard: [-1]\n";
     std::cout << "Human player " << this->name << ", please select a card to discard:\n";
     std::cin >> discard;
-    int discardInt = std::stoi(discard);
-    if(discardInt == -1) {
+    if(discard == -1) {
       return;
     }
-    for(int i = 0; i < hand.size(); i++) {
-      if(discardInt == i) {
-        this->hand[i] = upcard;
+    for(int i = 0; i < hand.size() - 1; i++) {
+      if(discard == i) {
+        handInput[i] = upcard;
+        this->hand = handInput;
       }
     }
   }
@@ -306,16 +305,18 @@ public:
   //  "Lead" means to play the first Card in a trick.  The card
   //  is removed the player's hand.
   Card lead_card(const std::string &trump) override {
+    vector<Card> handInput = this->hand;
     int playInt;
-    std::sort(hand.begin(), hand.end());
-    print_hand();
+    std::sort(handInput.begin(), handInput.end());
+    print_hand(handInput);
     std::cout << "Human player " << name << ", please select a card:\n";
     std::cin >> playInt;
     Card playCard;
-    for(int i = 0; i < this->hand.size(); i++) {
+    for(int i = 0; i < handInput.size(); i++) {
       if(playInt == i) {
-        playCard = this->hand[i];
-        this->hand.erase(this->hand.begin() + i);
+        playCard = handInput[i];
+        handInput.erase(handInput.begin() + i);
+        this->hand = handInput;
         return playCard;
       }
     }

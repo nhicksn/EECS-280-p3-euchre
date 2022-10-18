@@ -20,7 +20,7 @@ Pack::Pack() {
             index++;
         }
     }
-    this->next = 0;
+    this->reset();
 }
 
 // REQUIRES: pack_input contains a representation of a Pack in the
@@ -34,7 +34,7 @@ Pack::Pack(std::istream& pack_input) {
         Card card = Card(rank, suit);
         this->cards[i] = card;
     }
-    this->next = 0;
+    this->reset();
 }
 
 // REQUIRES: cards remain in the Pack
